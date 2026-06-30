@@ -188,12 +188,12 @@ Password: `rakesh123`
 
 ## 👨‍💻 Developed By
 
-23881A04H3 - Mustigolla Rishith Yadav
-23881A04G4 - Konda Shashi Kumar
-23881A04D5 - Banoth Akhil Nayak
+- **23881A04H3 - Mustigolla Rishith Yadav**
+- **23881A04G4 - Konda Shashi Kumar**
+- **23881A04D5 - Banoth Akhil Nayak**
 
-B.Tech in Electronics and Communication Engineering,
-Vardhaman College of Engineering.
+**B.Tech in Electronics and Communication Engineering**
+**Vardhaman College of Engineering**
 
 ---
 
