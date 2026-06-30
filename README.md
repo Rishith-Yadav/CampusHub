@@ -117,6 +117,74 @@ CampusHub/
 http://localhost/CampusHub
 
 ---
+## ⚙️ Database Configuration
+
+1. Open the `config` folder.
+2. Copy `db.example.php`.
+3. Rename the copied file to `db.php`.
+4. Update the database credentials according to your MySQL setup.
+
+Example:
+
+```php
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "campushub";
+```
+---
+
+## 🔑 Default Admin Login
+
+After importing the database, use the following credentials:
+
+**Email**
+
+```text
+admin@campushub.com
+```
+
+**Password**
+
+```text
+admin123
+```
+
+> You can change these credentials later from the database if required.
+---
+
+## 📌 Important Note
+
+- Import the `database/campushub.sql` file into MySQL.
+- Create `config/db.php` using `config/db.example.php`.
+- Update the database credentials in `db.php`.
+- Start Apache and MySQL using XAMPP.
+- Open `http://localhost/CampusHub` in your browser.
+
+---
+
+## 👥 Demo Credentials
+
+### 👨‍💼 Admin
+
+Email: `admin@campushub.com`
+Password: `admin123`
+
+---
+
+### 👨‍🏫 Faculty
+
+Email: `virendar@gmail.com`
+Password: `virendar123`
+
+---
+
+### 👨‍🎓 Student
+
+Email: `rakesh@gmail.com`
+Password: `rakesh123`
+
+---
 
 ## 👨‍💻 Developed By
 
