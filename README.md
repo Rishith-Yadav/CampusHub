@@ -186,6 +186,15 @@ Password: `rakesh123`
 
 ---
 
+## 📄 Project Report
+
+The complete internship report is available in the **report** folder.
+
+- 📘 **PDF Report:** `report/CampusHub_Report.pdf`
+- 📄 **LaTeX Source:** `report/CampusHub_Report.zip`
+
+---
+
 ## 👨‍💻 Developed By
 
 - **23881A04H3 - Mustigolla Rishith Yadav**
