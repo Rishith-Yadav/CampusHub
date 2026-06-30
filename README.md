@@ -190,8 +190,8 @@ Password: `rakesh123`
 
 The complete internship report is available in the **report** folder.
 
-- 📘 **PDF Report:** `report/CampusHub_Report.pdf`
-- 📄 **LaTeX Source:** `report/CampusHub_Report.zip`
+- 📘 **PDF Report:** `report/CampusHub_report.pdf`
+- 📄 **LaTeX Source:** `report/CampusHub_report.zip`
 
 ---
 
