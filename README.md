@@ -192,8 +192,8 @@ Password: `rakesh123`
 - **23881A04G4 - Konda Shashi Kumar**
 - **23881A04D5 - Banoth Akhil Nayak**
 
-**B.Tech in Electronics and Communication Engineering,**
-**Vardhaman College of Engineering**
+**B.Tech in Electronics and Communication Engineering ,**
+**Vardhaman College of Engineering.**
 
 ---
 
