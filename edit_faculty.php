@@ -1,13 +1,22 @@
 <?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+    exit();
+}
 include("config/db.php");
 
 if(!isset($_GET['id'])){
     die("Faculty ID missing.");
 }
 
-$id=$_GET['id'];
-$result=mysqli_query($conn,"SELECT * FROM faculty WHERE faculty_id='$id'");
+$id=(int)$_GET['id'];
+$stmt=mysqli_prepare($conn,"SELECT * FROM faculty WHERE faculty_id=?");
+mysqli_stmt_bind_param($stmt,"i",$id);
+mysqli_stmt_execute($stmt);
+$result=mysqli_stmt_get_result($stmt);
 $row=mysqli_fetch_assoc($result);
+mysqli_stmt_close($stmt);
 
 if(!$row){
     die("Faculty not found.");
@@ -19,21 +28,19 @@ if(isset($_POST['update'])){
     $email=$_POST['email'];
     $department=$_POST['department'];
     $designation=$_POST['designation'];
-    $password=$_POST['password'];
+    $hashed_password=password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-    $sql="UPDATE faculty SET
-    faculty_code='$faculty_code',
-    full_name='$full_name',
-    email='$email',
-    department='$department',
-    designation='$designation',
-    password='$password'
-    WHERE faculty_id='$id'";
+    $stmt=mysqli_prepare($conn,"UPDATE faculty SET
+    faculty_code=?, full_name=?, email=?, department=?, designation=?, password=?
+    WHERE faculty_id=?");
+    mysqli_stmt_bind_param($stmt,"ssssssi",$faculty_code,$full_name,$email,$department,$designation,$hashed_password,$id);
 
-    if(mysqli_query($conn,$sql)){
+    if(mysqli_stmt_execute($stmt)){
+        mysqli_stmt_close($stmt);
         header("Location: faculty.php");
         exit();
     }else{
+        mysqli_stmt_close($stmt);
         die(mysqli_error($conn));
     }
 }
