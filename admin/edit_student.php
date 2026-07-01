@@ -1,26 +1,40 @@
 <?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header("Location: ../login.php");
+    exit();
+}
 include("../config/db.php");
 
-$id=$_GET['id'];
-$result=mysqli_query($conn,"SELECT * FROM students WHERE student_id='$id'");
+if(!isset($_GET['id'])){
+    die("Student ID missing.");
+}
+$id=(int)$_GET['id'];
+$stmt=mysqli_prepare($conn,"SELECT * FROM students WHERE student_id=?");
+mysqli_stmt_bind_param($stmt,"i",$id);
+mysqli_stmt_execute($stmt);
+$result=mysqli_stmt_get_result($stmt);
 $row=mysqli_fetch_assoc($result);
+mysqli_stmt_close($stmt);
+
+if(!$row){
+    die("Student not found.");
+}
 
 if(isset($_POST['update'])){
     $roll=$_POST['roll'];
     $name=$_POST['name'];
     $email=$_POST['email'];
     $department=$_POST['department'];
-    $year=$_POST['year'];
-    $cgpa=$_POST['cgpa'];
+    $year=(int)$_POST['year'];
+    $cgpa=(float)$_POST['cgpa'];
 
-    mysqli_query($conn,"UPDATE students SET
-        roll_no='$roll',
-        full_name='$name',
-        email='$email',
-        department='$department',
-        year='$year',
-        cgpa='$cgpa'
-        WHERE student_id='$id'");
+    $stmt=mysqli_prepare($conn,"UPDATE students SET
+        roll_no=?, full_name=?, email=?, department=?, year=?, cgpa=?
+        WHERE student_id=?");
+    mysqli_stmt_bind_param($stmt,"ssssidi",$roll,$name,$email,$department,$year,$cgpa,$id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
     header("Location: ../students.php");
     exit();

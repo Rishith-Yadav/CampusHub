@@ -1,10 +1,18 @@
 <?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+    exit();
+}
 include("config/db.php");
 
 if(isset($_GET['search'])){
-    $search=$_GET['search'];
-    $result=mysqli_query($conn,"SELECT * FROM students
-    WHERE roll_no LIKE '%$search%' OR full_name LIKE '%$search%'");
+    $search='%'.$_GET['search'].'%';
+    $stmt=mysqli_prepare($conn,"SELECT * FROM students WHERE roll_no LIKE ? OR full_name LIKE ?");
+    mysqli_stmt_bind_param($stmt,"ss",$search,$search);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
 }else{
     $result=mysqli_query($conn,"SELECT * FROM students");
 }

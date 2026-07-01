@@ -10,27 +10,46 @@ if(!isset($_GET['id'])){
     die("Student ID missing.");
 }
 
-$id=$_GET['id'];
-$result=mysqli_query($conn,"SELECT * FROM students WHERE student_id='$id'");
+$id=(int)$_GET['id'];
+$stmt=mysqli_prepare($conn,"SELECT * FROM students WHERE student_id=?");
+mysqli_stmt_bind_param($stmt,"i",$id);
+mysqli_stmt_execute($stmt);
+$result=mysqli_stmt_get_result($stmt);
 $row=mysqli_fetch_assoc($result);
+mysqli_stmt_close($stmt);
 
 if(!$row){
     die("Student not found.");
 }
 
+// IDOR protection: ensure faculty can only edit students in their own department
+$faculty_id=(int)$_SESSION['faculty_id'];
+$f_stmt=mysqli_prepare($conn,"SELECT department FROM faculty WHERE faculty_id=?");
+mysqli_stmt_bind_param($f_stmt,"i",$faculty_id);
+mysqli_stmt_execute($f_stmt);
+$f_result=mysqli_stmt_get_result($f_stmt);
+$f_row=mysqli_fetch_assoc($f_result);
+mysqli_stmt_close($f_stmt);
+
+if(!$f_row || $f_row['department'] !== $row['department']){
+    die("Access denied: You can only edit students in your own department.");
+}
+
 if(isset($_POST['update'])){
-    $cgpa=$_POST['cgpa'];
-    $attendance=$_POST['attendance'];
+    $cgpa=(float)$_POST['cgpa'];
+    $attendance=(float)$_POST['attendance'];
 
-    $sql="UPDATE students SET
-    cgpa='$cgpa',
-    attendance='$attendance'
-    WHERE student_id='$id'";
+    $stmt=mysqli_prepare($conn,"UPDATE students SET
+    cgpa=?, attendance=?
+    WHERE student_id=?");
+    mysqli_stmt_bind_param($stmt,"ddi",$cgpa,$attendance,$id);
 
-    if(mysqli_query($conn,$sql)){
+    if(mysqli_stmt_execute($stmt)){
+        mysqli_stmt_close($stmt);
         header("Location: view_students.php");
         exit();
     }else{
+        mysqli_stmt_close($stmt);
         die(mysqli_error($conn));
     }
 }

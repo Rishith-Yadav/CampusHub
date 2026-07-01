@@ -5,7 +5,7 @@ $result = mysqli_query($conn,"SELECT notice FROM notices ORDER BY id DESC");
 
 $items = [];
 while($row = mysqli_fetch_assoc($result)){
-    $items[] = "📢 ".$row['notice'];
+    $items[] = "📢 ".htmlspecialchars($row['notice'], ENT_QUOTES, 'UTF-8');
 }
 
 $text = implode(" &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ", $items);

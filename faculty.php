@@ -1,17 +1,26 @@
 <?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+    exit();
+}
 include("config/db.php");
 
 if(isset($_GET['search'])){
 
-    $search = $_GET['search'];
+    $search = '%'.$_GET['search'].'%';
 
-    $result = mysqli_query($conn,
+    $stmt = mysqli_prepare($conn,
     "SELECT * FROM faculty
-    WHERE faculty_code LIKE '%$search%'
-    OR full_name LIKE '%$search%'
-    OR email LIKE '%$search%'
-    OR department LIKE '%$search%'
-    OR designation LIKE '%$search%'");
+    WHERE faculty_code LIKE ?
+    OR full_name LIKE ?
+    OR email LIKE ?
+    OR department LIKE ?
+    OR designation LIKE ?");
+    mysqli_stmt_bind_param($stmt,"sssss",$search,$search,$search,$search,$search);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
 
 }else{
 

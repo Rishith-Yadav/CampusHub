@@ -1,4 +1,9 @@
 <?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+    exit();
+}
 include("config/db.php");
 
 if(isset($_POST['add'])){
@@ -7,15 +12,18 @@ if(isset($_POST['add'])){
     $email=$_POST['email'];
     $department=$_POST['department'];
     $designation=$_POST['designation'];
-    $password=$_POST['password'];
+    $hashed_password=password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-    $sql="INSERT INTO faculty(faculty_code,full_name,email,department,designation,password)
-VALUES('$faculty_code','$full_name','$email','$department','$designation','$password')";
+    $stmt=mysqli_prepare($conn,"INSERT INTO faculty(faculty_code,full_name,email,department,designation,password)
+VALUES(?,?,?,?,?,?)");
+    mysqli_stmt_bind_param($stmt,"ssssss",$faculty_code,$full_name,$email,$department,$designation,$hashed_password);
 
-    if(mysqli_query($conn,$sql)){
+    if(mysqli_stmt_execute($stmt)){
+        mysqli_stmt_close($stmt);
         header("Location: faculty.php");
         exit();
     }else{
+        mysqli_stmt_close($stmt);
         $error="Unable to add faculty.";
     }
 }

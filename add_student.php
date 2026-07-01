@@ -1,4 +1,9 @@
 <?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+    exit();
+}
 include("config/db.php");
 
 if(isset($_POST['add'])){
@@ -6,17 +11,20 @@ if(isset($_POST['add'])){
     $name=$_POST['name'];
     $email=$_POST['email'];
     $department=$_POST['department'];
-    $year=$_POST['year'];
-    $cgpa=$_POST['cgpa'];
-    $password=$_POST['password'];
+    $year=(int)$_POST['year'];
+    $cgpa=(float)$_POST['cgpa'];
+    $hashed_password=password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-    $sql="INSERT INTO students(roll_no,full_name,email,department,year,cgpa,password)
-    VALUES('$roll','$name','$email','$department','$year','$cgpa','$password')";
+    $stmt=mysqli_prepare($conn,"INSERT INTO students(roll_no,full_name,email,department,year,cgpa,password)
+    VALUES(?,?,?,?,?,?,?)");
+    mysqli_stmt_bind_param($stmt,"ssssids",$roll,$name,$email,$department,$year,$cgpa,$hashed_password);
 
-    if(mysqli_query($conn,$sql)){
+    if(mysqli_stmt_execute($stmt)){
+        mysqli_stmt_close($stmt);
         header("Location: students.php");
         exit();
     }else{
+        mysqli_stmt_close($stmt);
         $error="Unable to add student.";
     }
 }
