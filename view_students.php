@@ -7,8 +7,12 @@ if(!isset($_SESSION['faculty_id'])){
 include("config/db.php");
 
 if(isset($_GET['search'])){
-    $s=mysqli_real_escape_string($conn,$_GET['search']);
-    $result=mysqli_query($conn,"SELECT * FROM students WHERE roll_no LIKE '%$s%' OR full_name LIKE '%$s%' OR department LIKE '%$s%'");
+    $s='%'.$_GET['search'].'%';
+    $stmt=mysqli_prepare($conn,"SELECT * FROM students WHERE roll_no LIKE ? OR full_name LIKE ? OR department LIKE ?");
+    mysqli_stmt_bind_param($stmt,"sss",$s,$s,$s);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
 }else{
     $result=mysqli_query($conn,"SELECT * FROM students");
 }
@@ -57,13 +61,13 @@ thead{background:#3E3A36;color:#fff}
 <tbody>
 <?php while($row=mysqli_fetch_assoc($result)){ ?>
 <tr>
-<td><?php echo $row['roll_no']; ?></td>
-<td><?php echo $row['full_name']; ?></td>
-<td><?php echo $row['email']; ?></td>
-<td><?php echo $row['department']; ?></td>
-<td><?php echo $row['year']; ?></td>
-<td><?php echo $row['cgpa']; ?></td>
-<td><?php echo $row['attendance']; ?>%</td>
+<td><?php echo htmlspecialchars($row['roll_no']); ?></td>
+<td><?php echo htmlspecialchars($row['full_name']); ?></td>
+<td><?php echo htmlspecialchars($row['email']); ?></td>
+<td><?php echo htmlspecialchars($row['department']); ?></td>
+<td><?php echo htmlspecialchars($row['year']); ?></td>
+<td><?php echo htmlspecialchars($row['cgpa']); ?></td>
+<td><?php echo htmlspecialchars($row['attendance']); ?>%</td>
 <td>
 <a href="edit_academic.php?id=<?php echo $row['student_id']; ?>" class="btn btn-warning btn-sm">
 Update

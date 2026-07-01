@@ -76,15 +76,15 @@ placeholder="Search by Faculty ID, Name, Email, Department or Designation"><butt
 <tbody>
 <?php while($row=mysqli_fetch_assoc($result)){ ?>
 <tr>
-<td><?php echo $row['faculty_id']; ?></td>
-<td><?php echo $row['faculty_code']; ?></td>
-<td><?php echo $row['full_name']; ?></td>
-<td><?php echo $row['email']; ?></td>
-<td><?php echo $row['department']; ?></td>
-<td><?php echo $row['designation']; ?></td>
+<td><?php echo htmlspecialchars($row['faculty_id']); ?></td>
+<td><?php echo htmlspecialchars($row['faculty_code']); ?></td>
+<td><?php echo htmlspecialchars($row['full_name']); ?></td>
+<td><?php echo htmlspecialchars($row['email']); ?></td>
+<td><?php echo htmlspecialchars($row['department']); ?></td>
+<td><?php echo htmlspecialchars($row['designation']); ?></td>
 <td>
-<a href="edit_faculty.php?id=<?php echo $row['faculty_id']; ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
-<a href="delete_faculty.php?id=<?php echo $row['faculty_id']; ?>" onclick="return confirm('Delete this faculty?')" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+<a href="edit_faculty.php?id=<?php echo htmlspecialchars($row['faculty_id']); ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+<a href="delete_faculty.php?id=<?php echo htmlspecialchars($row['faculty_id']); ?>&token=<?php echo $_SESSION['csrf_token']; ?>" onclick="return confirm('Delete this faculty?')" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
 </td>
 </tr>
 <?php } ?>

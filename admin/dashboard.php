@@ -1,7 +1,7 @@
 
 <?php
 session_start();
-if(!isset($_SESSION['email'])){
+if(!isset($_SESSION['email']) || $_SESSION['role'] !== 'admin'){
     header("Location: ../login.php");
     exit();
 }
@@ -69,7 +69,7 @@ font-size:42px;color:#C97B36;
 
 <div class="topbar">
 <h4>Admin Dashboard</h4>
-<div>Welcome, <?php echo $_SESSION['email']; ?></div>
+<div>Welcome, <?php echo htmlspecialchars($_SESSION['email']); ?></div>
 </div>
 
 <div class="row mt-4 g-4">
@@ -135,7 +135,7 @@ while($n=mysqli_fetch_assoc($list)){
 <span>📢 <?php echo htmlspecialchars($n['notice']); ?></span>
 
 <a
-href="../delete_notice.php?id=<?php echo $n['id']; ?>"
+href="../delete_notice.php?id=<?php echo $n['id']; ?>&token=<?php echo $_SESSION['csrf_token']; ?>"
 class="btn btn-danger btn-sm"
 onclick="return confirm('Delete this notice?')">
 Delete

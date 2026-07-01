@@ -67,16 +67,16 @@ body{background:#f4f1ea;font-family:Segoe UI,sans-serif;}
 <tbody>
 <?php while($row=mysqli_fetch_assoc($result)){ ?>
 <tr>
-<td><?php echo $row['student_id']; ?></td>
-<td><?php echo $row['roll_no']; ?></td>
-<td><?php echo $row['full_name']; ?></td>
-<td><?php echo $row['email']; ?></td>
-<td><?php echo $row['department']; ?></td>
-<td><?php echo $row['year']; ?></td>
-<td><?php echo $row['cgpa']; ?></td>
+<td><?php echo htmlspecialchars($row['student_id']); ?></td>
+<td><?php echo htmlspecialchars($row['roll_no']); ?></td>
+<td><?php echo htmlspecialchars($row['full_name']); ?></td>
+<td><?php echo htmlspecialchars($row['email']); ?></td>
+<td><?php echo htmlspecialchars($row['department']); ?></td>
+<td><?php echo htmlspecialchars($row['year']); ?></td>
+<td><?php echo htmlspecialchars($row['cgpa']); ?></td>
 <td>
 <a class="btn btn-sm btn-warning" href="admin/edit_student.php?id=<?php echo $row['student_id'];?>"><i class="bi bi-pencil"></i></a>
-<a class="btn btn-sm btn-danger" onclick="return confirm('Delete this student?')" href="admin/delete_student.php?id=<?php echo $row['student_id'];?>"><i class="bi bi-trash"></i></a>
+<a class="btn btn-sm btn-danger" onclick="return confirm('Delete this student?')" href="admin/delete_student.php?id=<?php echo $row['student_id'];?>&token=<?php echo $_SESSION['csrf_token'];?>"><i class="bi bi-trash"></i></a>
 </td>
 </tr>
 <?php } ?>

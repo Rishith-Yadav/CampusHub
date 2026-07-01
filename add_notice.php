@@ -20,7 +20,13 @@ if(isset($_POST['add'])){
 
 if(isset($_GET['delete'])){
     $id=(int)$_GET['delete'];
-    mysqli_query($conn,"DELETE FROM notices WHERE id=$id");
+    if(!isset($_GET['token']) || $_GET['token'] !== $_SESSION['csrf_token']){
+        die("Invalid CSRF token.");
+    }
+    $stmt=mysqli_prepare($conn,"DELETE FROM notices WHERE id=?");
+    mysqli_stmt_bind_param($stmt,"i",$id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
     header("Location: add_notice.php");
     exit();
 }
@@ -64,7 +70,7 @@ body{background:#f4f1ea;font-family:Segoe UI,sans-serif}
 <td width="100">
 <a class="btn btn-danger btn-sm"
 onclick="return confirm('Delete this notice?')"
-href="add_notice.php?delete=<?php echo $row['id']; ?>">
+href="add_notice.php?delete=<?php echo $row['id']; ?>&token=<?php echo $_SESSION['csrf_token']; ?>">
 Delete
 </a>
 </td>

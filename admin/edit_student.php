@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION['email'])){
+if(!isset($_SESSION['email']) || $_SESSION['role'] !== 'admin'){
     header("Location: ../login.php");
     exit();
 }
@@ -22,6 +22,9 @@ if(!$row){
 }
 
 if(isset($_POST['update'])){
+    if(!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']){
+        die("Invalid CSRF token.");
+    }
     $roll=$_POST['roll'];
     $name=$_POST['name'];
     $email=$_POST['email'];
@@ -61,23 +64,25 @@ body{background:#f4f1ea;font-family:Segoe UI,sans-serif;}
 
 <form method="POST">
 
+<input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
 <label class="form-label">Roll Number</label>
-<input class="form-control mb-3" name="roll" value="<?php echo $row['roll_no']; ?>" required>
+<input class="form-control mb-3" name="roll" value="<?php echo htmlspecialchars($row['roll_no']); ?>" required>
 
 <label class="form-label">Full Name</label>
-<input class="form-control mb-3" name="name" value="<?php echo $row['full_name']; ?>" required>
+<input class="form-control mb-3" name="name" value="<?php echo htmlspecialchars($row['full_name']); ?>" required>
 
 <label class="form-label">Email</label>
-<input class="form-control mb-3" type="email" name="email" value="<?php echo $row['email']; ?>" required>
+<input class="form-control mb-3" type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required>
 
 <label class="form-label">Department</label>
-<input class="form-control mb-3" name="department" value="<?php echo $row['department']; ?>" required>
+<input class="form-control mb-3" name="department" value="<?php echo htmlspecialchars($row['department']); ?>" required>
 
 <label class="form-label">Year</label>
-<input class="form-control mb-3" type="number" name="year" value="<?php echo $row['year']; ?>" required>
+<input class="form-control mb-3" type="number" name="year" value="<?php echo htmlspecialchars($row['year']); ?>" required>
 
 <label class="form-label">CGPA</label>
-<input class="form-control mb-3" type="number" step="0.01" name="cgpa" value="<?php echo $row['cgpa']; ?>" required>
+<input class="form-control mb-3" type="number" step="0.01" name="cgpa" value="<?php echo htmlspecialchars($row['cgpa']); ?>" required>
 
 <button class="btn btn-warm" name="update"><i class="bi bi-check-circle"></i> Update Student</button>
 <a href="../students.php" class="btn btn-secondary">Cancel</a>

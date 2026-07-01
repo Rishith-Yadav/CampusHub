@@ -36,6 +36,9 @@ if(!$f_row || $f_row['department'] !== $row['department']){
 }
 
 if(isset($_POST['update'])){
+    if(!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']){
+        die("Invalid CSRF token.");
+    }
     $cgpa=(float)$_POST['cgpa'];
     $attendance=(float)$_POST['attendance'];
 
@@ -50,7 +53,7 @@ if(isset($_POST['update'])){
         exit();
     }else{
         mysqli_stmt_close($stmt);
-        die(mysqli_error($conn));
+        die("Database error, please try again.");
     }
 }
 ?>
@@ -75,20 +78,22 @@ body{background:#f4f1ea;font-family:Segoe UI,sans-serif;}
 
 <form method="POST">
 
+<input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
 <label class="form-label">Roll Number</label>
-<input class="form-control mb-3" value="<?php echo $row['roll_no']; ?>" readonly>
+<input class="form-control mb-3" value="<?php echo htmlspecialchars($row['roll_no']); ?>" readonly>
 
 <label class="form-label">Student Name</label>
-<input class="form-control mb-3" value="<?php echo $row['full_name']; ?>" readonly>
+<input class="form-control mb-3" value="<?php echo htmlspecialchars($row['full_name']); ?>" readonly>
 
 <label class="form-label">Department</label>
-<input class="form-control mb-3" value="<?php echo $row['department']; ?>" readonly>
+<input class="form-control mb-3" value="<?php echo htmlspecialchars($row['department']); ?>" readonly>
 
 <label class="form-label">Current CGPA</label>
-<input type="number" step="0.01" min="0" max="10" name="cgpa" class="form-control mb-3" value="<?php echo $row['cgpa']; ?>" required>
+<input type="number" step="0.01" min="0" max="10" name="cgpa" class="form-control mb-3" value="<?php echo htmlspecialchars($row['cgpa']); ?>" required>
 
 <label class="form-label">Attendance (%)</label>
-<input type="number" step="0.01" min="0" max="100" name="attendance" class="form-control mb-4" value="<?php echo $row['attendance']; ?>" required>
+<input type="number" step="0.01" min="0" max="100" name="attendance" class="form-control mb-4" value="<?php echo htmlspecialchars($row['attendance']); ?>" required>
 
 <button class="btn btn-main" name="update">Update</button>
 <a href="view_students.php" class="btn btn-secondary">Cancel</a>
